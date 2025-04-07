@@ -4,6 +4,306 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tictactoe Game</title>
+	<style>
+		* {
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 97vh;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    color: #fff;
+    flex-direction: column;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.scores {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 350px;
+    height: 60px;
+    margin-top: 10px;
+    background: linear-gradient(145deg, #1e3c72, #2a5298);
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(5px);
+    padding: 0 20px;
+    position: relative;
+}
+
+.scores .playerXScore,
+.scores .playerYScore {
+    width: 120px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #3d79e9;
+    color: #fff;
+    font-size: 2.4rem;
+    font-weight: bold;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    position: relative;
+    margin: 0 15px;
+}
+
+.scores .playerXScore {
+    background: linear-gradient(145deg, #ff007f, #ff66b2);
+    text-shadow: 0 0 10px #ff007f, 0 0 20px #ff007f;
+}
+
+.scores .playerYScore {
+    background: linear-gradient(145deg, #00ff99, #66ffcc);
+    text-shadow: 0 0 10px #00ff99, 0 0 20px #00ff99;
+}
+
+.scores .playerXScore::before,
+.scores .playerYScore::before {
+    content: "";
+    position: absolute;
+    left: -30px;  /* Increase distance between label and score box */
+    font-size: 1.6rem;
+    font-weight: bold;
+}
+
+.scores .playerXScore::before {
+    content: "X";
+    color: #ff007f;
+}
+
+.scores .playerYScore::before {
+    content: "Y";
+    color: #00ff99;
+}
+
+.scores .playerXScore::after,
+.scores .playerYScore::after {
+    content: "";
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 5px;
+    background: #fff;
+    border-radius: 5px;
+}
+
+.scores .playerXScore,
+.scores .playerYScore {
+    transition: all 3s ease-in-out;
+}
+
+.scores .playerXScore:hover,
+.scores .playerYScore:hover {
+    background: #fff;
+    color: #333;
+    cursor: pointer;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+}
+
+
+.turn_indicator {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+.gird {
+    display: grid;
+    grid-template-columns: repeat(3, 80px);
+    grid-template-rows: repeat(3, 80px);
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.cell {
+    width: 80px;
+    height: 80px;
+    background-color: rgba(255, 255, 255, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.cell:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+.winner {
+    background-color: #4caf50 !important;
+    color: #fff;
+}
+
+#result {
+    font-size: 1.5rem;
+    margin-top: 15px;
+}
+
+.play_again {
+    margin-top: 15px;
+    background-color: #ff9800;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.play_again:hover {
+    background: #e68900;
+}
+
+.resetScore {
+    background-color: #ff6f61;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    margin-top: 20px;
+}
+
+.resetScore:hover {
+    background-color: #ff3b2a;
+    transform: scale(1.05);
+}
+
+.resetScore:active {
+    background-color: #ff2a1f;
+}
+
+.resetScore:focus {
+    outline: none;
+}
+
+
+.clock {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    transform: none;
+    display: flex;
+    flex-direction: row;
+    gap: 0;
+    width: 120px;
+    height: 50px;
+    background: transparent;
+    backdrop-filter: blur(-5px);
+    border-radius: 20px;
+    border: none;
+    /*box-shadow: 
+        0 0 10px #996899,
+        0 0 20px #00ffff,
+        0 0 30px #00ff00,
+        0 0 40px #ffff00;*/
+    overflow: hidden;
+    /*animation: glowPulse 2s ease-in-out infinite;*/
+    cursor: pointer;
+}
+
+@keyframes glowPulse {
+    0% {
+        box-shadow: 
+            0 0 10px #996899,
+            0 0 20px #00ffff,
+            0 0 30px #00ff00,
+            0 0 40px #ffff00,
+            0 0 50px #dd7c7c,
+            0 0 60px #df5c9d;
+    }
+    50% {
+        box-shadow: 
+            0 0 10px #e9abe9,
+            0 0 20px #7bfdfd,
+            0 0 30px #9bd49b,
+            0 0 40px #f7f7c6,
+            0 0 50px #e0c2c2,
+            0 0 60px #754e62;
+    }
+    100% {
+        box-shadow: 
+            0 0 10px #996899,
+            0 0 20px #77c0c0,
+            0 0 30px #80bb80,
+            0 0 40px #caca88,
+            0 0 50px #dd7c7c,
+            0 0 60px #db88b2;
+    }
+}
+
+.modal {
+    width: 80px;
+    height: 100%;
+    display: flex;
+    justify-content: center; 
+    align-items: center;      
+    color: white;             
+    font-size: 24px;          
+    position: relative;
+    text-shadow: 0 0 5px #fff, 
+        0 0 10px #0ff, 
+        0 0 15px #0ff;
+}
+
+
+
+.clock .modal:nth-child(1),
+.clock .modal:nth-child(2),
+.clock .modal:nth-child(3) {
+    font-size: 26px;
+}
+
+
+.modal:nth-child(1)::after,
+.modal:nth-child(2)::after {
+    content: ":";
+    font-size: 24px;
+    font-weight: 400;
+    position: absolute;
+    right: -1px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.modal:nth-child(3)::after {
+    content: "";
+}
+	</style>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -37,6 +337,180 @@
             <button class="resetScore" id="resetScore" style="display: none;">Reset Scores</button>
 
     </div>
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+    let hours = document.querySelector('#hours');
+    let minutes = document.querySelector('#minutes');
+    let seconds = document.getElementById('seconds');
+
+    function updateClock() {
+        let clock = new Date();
+        let hour = clock.getHours();
+        let minute = clock.getMinutes();
+        let second = clock.getSeconds();
+
+        hours.textContent = hour < 10 ? '0' + hour : hour;
+        minutes.textContent = minute < 10 ? '0' + minute : minute;
+        seconds.textContent = second < 10 ? '0' + second : second;
+    }
+
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    const el = document.querySelector('.clock');
+
+
+    el.style.left = el.offsetLeft + 'px';
+    el.style.top = el.offsetTop + 'px';
+
+    el.addEventListener('mousedown', mousedown);
+
+    function mousedown(e) {
+        el.style.cursor = 'grabbing'; // optional visual feedback
+        let prevX = e.clientX;
+        let prevY = e.clientY;
+
+        window.addEventListener('mousemove', mousemove);
+        window.addEventListener('mouseup', mouseup);
+
+        function mousemove(e) {
+    let newX = e.clientX - prevX;
+    let newY = e.clientY - prevY;
+
+    const rect = el.getBoundingClientRect();
+
+    let newLeft = rect.left + newX;
+    let newTop = rect.top + newY;
+
+    
+    const maxLeft = window.innerWidth - el.offsetWidth;
+    const maxTop = window.innerHeight - el.offsetHeight;
+
+    
+    newLeft = Math.max(0, Math.min(newLeft, maxLeft));
+    newTop = Math.max(0, Math.min(newTop, maxTop));
+
+    el.style.left = newLeft + 'px';
+    el.style.top = newTop + 'px';
+
+    prevX = e.clientX;
+    prevY = e.clientY;
+}
+
+
+        function mouseup() {
+            el.style.cursor = 'grab';
+            window.removeEventListener('mousemove', mousemove);
+            window.removeEventListener('mouseup', mouseup);
+        }
+    }
+});
+
+
+const cell = document.querySelectorAll('.cell');
+const turnIndicator = document.getElementById("turnX");
+const result = document.getElementById("result");
+const resetButton = document.getElementById("reset");
+const resetScore = document.querySelector(".resetScore")
+
+let scoreX = document.querySelector('.playerXScore');
+let scoreY = document.querySelector('.playerYScore')
+
+let currentPlayer = "X";
+let gameBoard = Array(9).fill("")
+let gameActive = true;
+let playerXScore = 0;
+let playerYScore = 0;
+
+const winningConditions = [
+    [0, 1, 2], [3, 4, 5], [6, 7, 8],
+    [0, 3, 6], [1, 4, 7], [2, 5, 8],
+    [0, 4, 8],[2, 4, 6]
+]
+
+function checkWin(){
+    for (let condition of winningConditions){
+        let [a,b,c] = condition;
+
+        if(gameBoard[a] && gameBoard[a] === gameBoard[b] && gameBoard[a] === gameBoard[c]){
+            gameActive = false;
+            result.textContent = `${currentPlayer} Win!`;
+            condition.forEach(index => cell[index].classList.add("winner"));
+            resetButton.style.display = "block";
+
+            if(currentPlayer === 'X'){
+                playerXScore++;
+                scoreX.textContent = playerXScore;
+            }
+
+            else if(currentPlayer === 'O'){
+                playerYScore++;
+                scoreY.textContent = playerYScore;
+            }
+
+            if (scoreX.textContent > 1 || scoreY.textContent > 1){
+                resetScore.style.display = "block";
+            }
+            else{
+                resetScore.style.display = "none";
+            }
+
+            return;
+        }
+    }
+
+    if(!gameBoard.includes("")){
+        gameActive = false;
+        result.textContent = "It's a Draw!";
+        resetButton.style.display = "block";
+    }
+}
+    function handleCellClick(e){
+        const index = e.target.dataset.index;
+
+        if(gameBoard[index] || !gameActive)return;
+        gameBoard[index] = currentPlayer;
+        e.target.textContent = currentPlayer;
+        checkWin();
+        currentPlayer = currentPlayer === "X" ? "O" : "X";
+        turnIndicator.textContent = currentPlayer;
+    }
+
+    function resetGame(){
+        gameBoard.fill("");
+        cell.forEach(cell => {
+            cell.textContent = "";
+            cell.classList.remove("winner");
+        });
+
+        gameActive = true;
+        currentPlayer = "X"
+        turnIndicator.textContent = currentPlayer;
+        result.textContent = "";
+        resetButton.style.display = "none";
+    }
+
+    if (scoreX.textContent > 1 || scoreY.textContent > 1){
+        resetScore.style.display = "block";
+    }
+
+    resetScore.addEventListener("click", function(){
+        let confirmation = confirm("Are you sure you want to set the scores?")
+
+        if(confirmation){
+            playerXScore = 0;
+            playerYScore = 0;
+            scoreX.textContent = playerXScore;
+            scoreY.textContent = playerYScore;
+            resetScore.style.display = "none";
+        }
+    })
+
+    cell.forEach(cell => cell.addEventListener("click", handleCellClick));
+    resetButton.addEventListener("click", resetGame)
+
+
+	</script>
     <script src="script.js"></script>
 </body>
 </html>
